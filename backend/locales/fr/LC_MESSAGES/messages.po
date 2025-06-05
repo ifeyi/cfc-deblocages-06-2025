@@ -1,0 +1,44 @@
+# ============================
+# backend/app/locales/fr/LC_MESSAGES/messages.po
+# ============================
+# French translations for CFC Déblocages
+msgid ""
+msgstr ""
+"Project-Id-Version: CFC Déblocages 1.0\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Welcome to CFC Disbursements API"
+msgstr "Bienvenue sur l'API CFC Déblocages"
+
+msgid "Loan not found"
+msgstr "Prêt introuvable"
+
+msgid "Client not found"
+msgstr "Client introuvable"
+
+msgid "Invalid credentials"
+msgstr "Identifiants invalides"
+
+msgid "Disbursement request created successfully"
+msgstr "Demande de déblocage créée avec succès"
+
+msgid "Alert acknowledged"
+msgstr "Alerte acquittée"
+
+msgid "Document uploaded successfully"
+msgstr "Document téléchargé avec succès"
+
+msgid "Insufficient permissions"
+msgstr "Permissions insuffisantes"
+
+msgid "Validity warning"
+msgstr "Avertissement de validité"
+
+msgid "Work delay detected"
+msgstr "Retard de travaux détecté"
+
+msgid "Repayment starting soon"
+msgstr "Remboursement imminent"
