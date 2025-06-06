@@ -1,0 +1,111 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "viewDetails": "View details",
+    "allStatuses": "All statuses",
+    "months": "months",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "clients": "Clients",
+    "loans": "Loans",
+    "disbursements": "Disbursements",
+    "alerts": "Alerts",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "loginDescription": "Sign in to access your workspace",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "loginSuccess": "Login successful",
+    "loginError": "Invalid credentials"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Activity overview",
+    "totalClients": "Total clients",
+    "activeLoans": "Active loans",
+    "pendingDisbursements": "Pending disbursements",
+    "activeAlerts": "Active alerts",
+    "monthlyDisbursements": "Monthly disbursements",
+    "recentActivity": "Recent activity"
+  },
+  "loans": {
+    "title": "Loans Management",
+    "subtitle": "Manage all client loans",
+    "new": "New loan",
+    "searchPlaceholder": "Search by number, client...",
+    "created": "Created on"
+  },
+  "loan": {
+    "type": {
+      "PRET_CLASSIQUE_ACQUEREUR": "Classic buyer loan",
+      "PRET_CLASSIQUE_CONSTRUCTEUR": "Classic builder loan",
+      "PRET_LOCATIF_ORDINAIRE": "Ordinary rental loan",
+      "FONCIER_CLASSIQUE_JEUNES": "Classic youth land loan"
+    },
+    "status": {
+      "BROUILLON": "Draft",
+      "APPROUVE": "Approved",
+      "EN_COURS": "In progress",
+      "DEBLOCAGE": "Disbursing",
+      "COMPLETE": "Completed",
+      "ANNULE": "Cancelled",
+      "SUSPENDU": "Suspended"
+    }
+  },
+  "alerts": {
+    "title": "Alerts Management",
+    "subtitle": "Monitor and manage all system alerts",
+    "pending": "Pending alerts",
+    "history": "Alert history",
+    "pendingCount": "Pending",
+    "criticalCount": "Critical",
+    "warningCount": "Warnings",
+    "acknowledge": "Acknowledge",
+    "resolve": "Resolve",
+    "acknowledged": "Alert acknowledged",
+    "resolved": "Alert resolved",
+    "resolvedAt": "Resolved on"
+  },
+  "alert": {
+    "type": {
+      "VALIDITY_WARNING": "Validity warning",
+      "VALIDITY_CRITICAL": "Critical validity",
+      "WORK_DELAY_WARNING": "Work delay",
+      "WORK_DELAY_CRITICAL": "Critical work delay",
+      "REPAYMENT_UPCOMING": "Upcoming repayment",
+      "REPAYMENT_IMMINENT": "Imminent repayment",
+      "MISSING_DOCUMENT": "Missing document",
+      "DOCUMENT_EXPIRY": "Document expired"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "ACKNOWLEDGED": "Acknowledged",
+      "RESOLVED": "Resolved",
+      "ESCALATED": "Escalated"
+    }
+  },
+  "user": {
+    "profile": "My profile",
+    "settings": "Settings"
+  }
+}

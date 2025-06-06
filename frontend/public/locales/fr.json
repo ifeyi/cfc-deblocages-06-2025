@@ -1,0 +1,111 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "import": "Importer",
+    "viewDetails": "Voir les détails",
+    "allStatuses": "Tous les statuts",
+    "months": "mois",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "clients": "Clients",
+    "loans": "Prêts",
+    "disbursements": "Déblocages",
+    "alerts": "Alertes",
+    "reports": "Rapports",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": "Connexion",
+    "loginDescription": "Connectez-vous pour accéder à votre espace",
+    "username": "Nom d'utilisateur",
+    "usernamePlaceholder": "Entrez votre nom d'utilisateur",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "loginSuccess": "Connexion réussie",
+    "loginError": "Identifiants invalides"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "subtitle": "Vue d'ensemble de l'activité",
+    "totalClients": "Total clients",
+    "activeLoans": "Prêts actifs",
+    "pendingDisbursements": "Déblocages en attente",
+    "activeAlerts": "Alertes actives",
+    "monthlyDisbursements": "Déblocages mensuels",
+    "recentActivity": "Activité récente"
+  },
+  "loans": {
+    "title": "Gestion des prêts",
+    "subtitle": "Gérez tous les prêts clients",
+    "new": "Nouveau prêt",
+    "searchPlaceholder": "Rechercher par numéro, client...",
+    "created": "Créé le"
+  },
+  "loan": {
+    "type": {
+      "PRET_CLASSIQUE_ACQUEREUR": "Prêt classique acquéreur",
+      "PRET_CLASSIQUE_CONSTRUCTEUR": "Prêt classique constructeur",
+      "PRET_LOCATIF_ORDINAIRE": "Prêt locatif ordinaire",
+      "FONCIER_CLASSIQUE_JEUNES": "Foncier classique jeunes"
+    },
+    "status": {
+      "BROUILLON": "Brouillon",
+      "APPROUVE": "Approuvé",
+      "EN_COURS": "En cours",
+      "DEBLOCAGE": "Déblocage",
+      "COMPLETE": "Complété",
+      "ANNULE": "Annulé",
+      "SUSPENDU": "Suspendu"
+    }
+  },
+  "alerts": {
+    "title": "Gestion des alertes",
+    "subtitle": "Surveillez et gérez toutes les alertes du système",
+    "pending": "Alertes en attente",
+    "history": "Historique des alertes",
+    "pendingCount": "En attente",
+    "criticalCount": "Critiques",
+    "warningCount": "Avertissements",
+    "acknowledge": "Acquitter",
+    "resolve": "Résoudre",
+    "acknowledged": "Alerte acquittée",
+    "resolved": "Alerte résolue",
+    "resolvedAt": "Résolue le"
+  },
+  "alert": {
+    "type": {
+      "VALIDITY_WARNING": "Avertissement validité",
+      "VALIDITY_CRITICAL": "Validité critique",
+      "WORK_DELAY_WARNING": "Retard travaux",
+      "WORK_DELAY_CRITICAL": "Retard travaux critique",
+      "REPAYMENT_UPCOMING": "Remboursement proche",
+      "REPAYMENT_IMMINENT": "Remboursement imminent",
+      "MISSING_DOCUMENT": "Document manquant",
+      "DOCUMENT_EXPIRY": "Document expiré"
+    },
+    "status": {
+      "PENDING": "En attente",
+      "ACKNOWLEDGED": "Acquittée",
+      "RESOLVED": "Résolue",
+      "ESCALATED": "Escaladée"
+    }
+  },
+  "user": {
+    "profile": "Mon profil",
+    "settings": "Paramètres"
+  }
+}
