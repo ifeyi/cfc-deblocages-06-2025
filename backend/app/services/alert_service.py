@@ -1,13 +1,12 @@
 # ============================
 # backend/app/services/alert_service.py
 # ============================
-from typing import List, Optional
+from typing import List, Optional, Dict
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from app.models import Alert, Loan, Disbursement, AlertType, AlertStatus
 from app.models.loan import LoanStatus
 from app.models.disbursement import DisbursementStatus
-from app.core.celery_app import celery_app
 import logging
 
 logger = logging.getLogger(__name__)
@@ -134,8 +133,12 @@ class AlertService:
             self.db.add(alert)
             self.db.commit()
             
-            # Schedule notification
+            # Import here to avoid circular imports
+            from app.tasks import send_alert_notifications
+            
+            # Schedule notification using Celery task
             send_alert_notifications.delay(alert.id)
+            logger.info(f"✅ Alert {alert.id} created and notification scheduled")
     
     def get_alerts_summary(self) -> Dict:
         """
@@ -165,3 +168,41 @@ class AlertService:
             summary["by_status"][status] = summary["by_status"].get(status, 0) + 1
         
         return summary
+    
+    def resolve_alert(self, alert_id: int) -> bool:
+        """
+        Marquer une alerte comme résolue
+        """
+        try:
+            alert = self.db.query(Alert).filter(Alert.id == alert_id).first()
+            if alert:
+                alert.status = AlertStatus.RESOLVED
+                alert.resolved_at = datetime.now()
+                self.db.commit()
+                logger.info(f"Alert {alert_id} marked as resolved")
+                return True
+            else:
+                logger.warning(f"Alert {alert_id} not found")
+                return False
+        except Exception as e:
+            logger.error(f"Error resolving alert {alert_id}: {str(e)}")
+            return False
+    
+    def acknowledge_alert(self, alert_id: int) -> bool:
+        """
+        Marquer une alerte comme acquittée
+        """
+        try:
+            alert = self.db.query(Alert).filter(Alert.id == alert_id).first()
+            if alert:
+                alert.status = AlertStatus.ACKNOWLEDGED
+                alert.acknowledged_at = datetime.now()
+                self.db.commit()
+                logger.info(f"Alert {alert_id} acknowledged")
+                return True
+            else:
+                logger.warning(f"Alert {alert_id} not found")
+                return False
+        except Exception as e:
+            logger.error(f"Error acknowledging alert {alert_id}: {str(e)}")
+            return False

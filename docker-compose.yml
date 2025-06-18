@@ -1,5 +1,4 @@
-# docker-compose.yml
-version: '3.8'
+# docker-compose.yml with Docker Secrets
 
 services:
   # Base de données PostgreSQL
@@ -9,7 +8,9 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME:-cfc_deblocages}
       POSTGRES_USER: ${DB_USER:-cfc_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-SecurePassword123!}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -26,13 +27,15 @@ services:
   redis:
     image: redis:7-alpine
     container_name: cfc_redis
-    command: redis-server --requirepass ${REDIS_PASSWORD:-RedisPassword123!}
+    command: sh -c 'redis-server --requirepass "$$(cat /run/secrets/redis_password)"'
+    secrets:
+      - redis_password
     ports:
       - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "redis-cli -a $$(cat /run/secrets/redis_password) ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,7 +49,9 @@ services:
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-MinioPassword123!}
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/minio_password
+    secrets:
+      - minio_password
     ports:
       - "${MINIO_PORT:-9000}:9000"
       - "${MINIO_CONSOLE_PORT:-9001}:9001"
@@ -60,21 +65,37 @@ services:
     networks:
       - cfc_network
 
-  # Backend FastAPI
+# Backend FastAPI
   backend:
     build:
       context: .
       dockerfile: docker/Dockerfile.backend
     container_name: cfc_backend
     environment:
-      - DATABASE_URL=postgresql://${DB_USER:-cfc_user}:${DB_PASSWORD:-SecurePassword123!}@postgres:5432/${DB_NAME:-cfc_deblocages}
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-RedisPassword123!}@redis:6379/0
+      - DB_USER=${DB_USER:-cfc_user}
+      - DB_NAME=${DB_NAME:-cfc_deblocages}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD_FILE=/run/secrets/redis_password
       - MINIO_ENDPOINT=minio:9000
       - MINIO_ACCESS_KEY=${MINIO_ROOT_USER:-admin}
-      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD:-MinioPassword123!}
-      - SECRET_KEY=${SECRET_KEY:-your-secret-key-here-change-in-production}
+      - MINIO_SECRET_KEY_FILE=/run/secrets/minio_password
+      - SECRET_KEY_FILE=/run/secrets/app_secret_key
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - DEFAULT_LANGUAGE=${DEFAULT_LANGUAGE:-fr}
+      # Variables UTF-8
+      - LANG=C.UTF-8
+      - LC_ALL=C.UTF-8
+      - PYTHONIOENCODING=utf-8
+    secrets:
+      - db_password
+      - redis_password
+      - minio_password
+      - app_secret_key
     volumes:
       - ./backend:/app
       - backend_uploads:/app/uploads
@@ -102,11 +123,22 @@ services:
       dockerfile: docker/Dockerfile.backend
     container_name: cfc_celery_worker
     environment:
-      - DATABASE_URL=postgresql://${DB_USER:-cfc_user}:${DB_PASSWORD:-SecurePassword123!}@postgres:5432/${DB_NAME:-cfc_deblocages}
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-RedisPassword123!}@redis:6379/0
+      - DB_USER=${DB_USER:-cfc_user}
+      - DB_NAME=${DB_NAME:-cfc_deblocages}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD_FILE=/run/secrets/redis_password
       - MINIO_ENDPOINT=minio:9000
       - MINIO_ACCESS_KEY=${MINIO_ROOT_USER:-admin}
-      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD:-MinioPassword123!}
+      - MINIO_SECRET_KEY_FILE=/run/secrets/minio_password
+    secrets:
+      - db_password
+      - redis_password
+      - minio_password
     volumes:
       - ./backend:/app
     depends_on:
@@ -124,8 +156,18 @@ services:
       dockerfile: docker/Dockerfile.backend
     container_name: cfc_celery_beat
     environment:
-      - DATABASE_URL=postgresql://${DB_USER:-cfc_user}:${DB_PASSWORD:-SecurePassword123!}@postgres:5432/${DB_NAME:-cfc_deblocages}
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-RedisPassword123!}@redis:6379/0
+      - DB_USER=${DB_USER:-cfc_user}
+      - DB_NAME=${DB_NAME:-cfc_deblocages}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD_FILE=/run/secrets/redis_password
+    secrets:
+      - db_password
+      - redis_password
     volumes:
       - ./backend:/app
     depends_on:
@@ -143,7 +185,7 @@ services:
       dockerfile: docker/Dockerfile.frontend
     container_name: cfc_frontend
     environment:
-      - VITE_API_URL=http://localhost:${NGINX_PORT:-80}/api
+      - VITE_API_URL=http://localhost:8000/api
       - VITE_DEFAULT_LANGUAGE=${DEFAULT_LANGUAGE:-fr}
     volumes:
       - ./frontend:/app
@@ -175,16 +217,36 @@ services:
       context: .
       dockerfile: docker/Dockerfile.backend
     container_name: cfc_flower
-    environment:
-      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD:-RedisPassword123!}@redis:6379/0
+    secrets:
+      - redis_password
     ports:
       - "${FLOWER_PORT:-5555}:5555"
     depends_on:
       - redis
       - celery_worker
-    command: celery -A app.core.celery_app flower
+    command: >
+      sh -c "
+        REDIS_PASSWORD=$$(cat /run/secrets/redis_password 2>/dev/null || echo '');
+        if [ ! -z \"$$REDIS_PASSWORD\" ]; then
+          export CELERY_BROKER_URL=\"redis://:$$REDIS_PASSWORD@redis:6379/0\";
+        else
+          export CELERY_BROKER_URL=\"redis://redis:6379/0\";
+        fi;
+        celery -A app.core.celery_app flower --broker=$$CELERY_BROKER_URL
+      "
     networks:
       - cfc_network
+
+# Docker Secrets Definition
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  redis_password:
+    file: ./secrets/redis_password.txt
+  minio_password:
+    file: ./secrets/minio_password.txt
+  app_secret_key:
+    file: ./secrets/app_secret_key.txt
 
 volumes:
   postgres_data:

@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import './lib/i18n'
@@ -45,7 +45,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           },
         }}
       />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* ReactQuery DevTools commenté temporairement */}
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   </React.StrictMode>,
 )

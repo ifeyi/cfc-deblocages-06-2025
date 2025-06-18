@@ -71,11 +71,11 @@ export default function DashboardPage() {
     },
     {
       title: t('dashboard.activeAlerts'),
-      value: stats?.activeAlerts.total || 0,
+      value: stats?.activeAlerts?.total || 0,
       icon: AlertCircle,
       color: 'text-red-600',
       bgColor: 'bg-red-100',
-      subtext: `${stats?.activeAlerts.red || 0} critiques, ${stats?.activeAlerts.orange || 0} avertissements`,
+      subtext: `${stats?.activeAlerts?.red || 0} critiques, ${stats?.activeAlerts?.orange || 0} avertissements`,
     },
   ]
 

@@ -36,7 +36,8 @@ export const useAuthStore = create<AuthState>()(
       login: async (username, password) => {
         set({ isLoading: true })
         try {
-          const response = await api.post('/v1/auth/login', {
+          // Utiliser l'endpoint JSON correct
+          const response = await api.post('/v1/auth/login-json', {
             username,
             password,
           })

@@ -1,0 +1,50 @@
+# ============================
+# docker-compose.prod.yml
+# ============================
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=False
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
+      "
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend.prod
+    restart: always
+
+  nginx:
+    volumes:
+      - ./docker/nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+
+  postgres:
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+
+  redis:
+    restart: always
+
+  celery_worker:
+    restart: always
+    deploy:
+      replicas: 2
+
+  celery_beat:
+    restart: always
